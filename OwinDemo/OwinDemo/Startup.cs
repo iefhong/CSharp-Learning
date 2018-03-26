@@ -18,7 +18,7 @@ namespace OwinDemo
             //    Debug.WriteLine("Incoming request: " + ctx.Request.Path);
             //});
 
-            app.Use<DebugMiddleware>(new DebugMiddlewareOptions
+            app.UseDebugMiddleware(new DebugMiddlewareOptions
             {
                 OnIncomingRequest = (ctx) =>
                 {
@@ -32,8 +32,10 @@ namespace OwinDemo
                     watch.Stop();
                     Debug.WriteLine("Request took: " + watch.ElapsedMilliseconds + " ms");
                 }
-                
+
             });
+
+            //app.Use<DebugMiddleware>();
 
             app.Use(async (ctx, next) => {
                 await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");

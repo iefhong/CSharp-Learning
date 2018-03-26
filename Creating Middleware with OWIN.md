@@ -53,7 +53,7 @@
         {
             AppFunc _next;
             DebugMiddlewareOptions _options;
-            public DebugMiddleware(AppFunc next, DebugMiddlewareOptions options)
+            public DebugMiddleware(AppFunc next, DebugMiddlewareOptions options )
             {
                 _next = next;
                 _options = options;
@@ -121,3 +121,47 @@
         }        
         ```
     - xxxMiddlewareExtensions  
+    ``` DebugMiddlewareExtensions.cs
+    public static class DebugMiddlewareExtensions
+    {
+        public static void UseDebugMiddleware(this IAppBuilder app, DebugMiddlewareOptions options = null)
+        {
+            if (options == null)
+            {
+                options = new DebugMiddlewareOptions();
+            }
+
+            app.Use<DebugMiddleware>(options);
+        }
+    }    
+    ```
+    ``` Startup.cs
+    public class Startup
+    {
+        public static void Configuration(IAppBuilder app)
+        {
+            app.UseDebugMiddleware(new DebugMiddlewareOptions
+            {
+                OnIncomingRequest = (ctx) =>
+                {
+                    var watch = new Stopwatch();
+                    watch.Start();
+                    ctx.Environment["DebugStopwatch"] = watch;
+                },
+                OnOutgoingRequest = (ctx) =>
+                {
+                    var watch = (Stopwatch)ctx.Environment["DebugStopwatch"];
+                    watch.Stop();
+                    Debug.WriteLine("Request took: " + watch.ElapsedMilliseconds + " ms");
+                }
+
+            });
+
+            //app.Use<DebugMiddleware>();
+
+            app.Use(async (ctx, next) => {
+                await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
+            });
+        }
+    }    
+    ```
