@@ -1,26 +1,13 @@
-﻿using Owin;
-using OwinDemo.Middleware;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
-using Nancy.Owin;
-using Nancy;
-using System.Web.Http;
-
-namespace OwinDemo
-{
+# Securing OWIN Pipelines
+* Add CookieAuthenticationMiddleware
+    - Install  
+    install-package microsoft.owin.security.cookies
+    - Configuration  
+    ``` Startup.cs
     public class Startup
     {
         public static void Configuration(IAppBuilder app)
         {
-            //app.Use(async (ctx, next) => {
-            //    Debug.WriteLine("Incoming request: " + ctx.Request.Path);
-            //    await next();
-            //    Debug.WriteLine("Incoming request: " + ctx.Request.Path);
-            //});
-
             app.UseDebugMiddleware(new DebugMiddlewareOptions
             {
                 OnIncomingRequest = (ctx) =>
@@ -44,12 +31,6 @@ namespace OwinDemo
                 LoginPath = new Microsoft.Owin.PathString("/Auth/Login")
             });
 
-            //app.Use<DebugMiddleware>();
-
-            //app.UseNancy();
-
-            //app.Map("/nancy", mappedApp => mappedApp.UseNancy());
-
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
             app.UseWebApi(config);
@@ -59,9 +40,11 @@ namespace OwinDemo
                 conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
             });
 
-            //app.Use(async (ctx, next) => {
-            //    await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
-            //});
         }
-    }
-}
+    }    
+    ```
+* Authenticate user  
+    - IAuthenticationManager.SignIn()
+* Use the user and the user's claims
+* Log out user
+    * IAuthenticationManager.SignOut()    
