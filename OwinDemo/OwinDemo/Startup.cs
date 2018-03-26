@@ -17,7 +17,9 @@ namespace OwinDemo
             //    await next();
             //    Debug.WriteLine("Incoming request: " + ctx.Request.Path);
             //});
-            app.Use<DebugMiddleware>();
+
+            app.Use<DebugMiddleware>(new DebugMiddlewareOptions());
+
             app.Use(async (ctx, next) => {
                 await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
             });
