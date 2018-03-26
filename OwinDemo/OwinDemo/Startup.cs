@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using Nancy.Owin;
 using Nancy;
+using System.Web.Http;
 
 namespace OwinDemo
 {
@@ -43,9 +44,13 @@ namespace OwinDemo
 
             //app.Map("/nancy", mappedApp => mappedApp.UseNancy());
 
-            app.UseNancy(config =>
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            app.UseWebApi(config);
+
+            app.UseNancy(conf =>
             {
-                config.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
+                conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
             });
 
             app.Use(async (ctx, next) => {
