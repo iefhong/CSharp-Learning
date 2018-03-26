@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 
-namespace OwinDemo.Controller
+namespace OwinDemo.Controllers
 {
     [RoutePrefix("api")]
     public class HelloWorldController : ApiController

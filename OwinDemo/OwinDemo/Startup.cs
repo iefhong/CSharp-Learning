@@ -53,9 +53,9 @@ namespace OwinDemo
                 conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
             });
 
-            app.Use(async (ctx, next) => {
-                await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
-            });
+            //app.Use(async (ctx, next) => {
+            //    await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
+            //});
         }
     }
 }

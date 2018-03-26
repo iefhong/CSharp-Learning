@@ -141,4 +141,85 @@
     }    
     ```
 # ASP.NET MVC
-    
+* Install
+    install-package microsoft.aspnet.mvc    
+* Configuration MVC
+    ``` HomeController.cs
+    public class HomeController : Controller
+    {
+        // GET: Home
+        public ActionResult Index()
+        {
+            return View();
+        }
+    }    
+    ```    
+    ``` Index.cshtml
+    @inherits System.Web.Mvc.WebViewPage
+    @{
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Index</title>
+    </head>
+    <body>
+        <div> 
+            Hello from MVC
+        </div>
+    </body>
+    </html>
+    ```
+    ``` Global.asax
+    public class Global : System.Web.HttpApplication
+    {
+
+        protected void Application_Start(object sender, EventArgs e)
+        {
+            RouteTable.Routes.MapRoute(name: "Default",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Home", action = "Index" });
+        }
+    }    
+    ```
+    ``` Startup.cs
+    public class Startup
+    {
+        public static void Configuration(IAppBuilder app)
+        {
+            app.UseDebugMiddleware(new DebugMiddlewareOptions
+            {
+                OnIncomingRequest = (ctx) =>
+                {
+                    var watch = new Stopwatch();
+                    watch.Start();
+                    ctx.Environment["DebugStopwatch"] = watch;
+                },
+                OnOutgoingRequest = (ctx) =>
+                {
+                    var watch = (Stopwatch)ctx.Environment["DebugStopwatch"];
+                    watch.Stop();
+                    Debug.WriteLine("Request took: " + watch.ElapsedMilliseconds + " ms");
+                }
+
+            });
+
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            app.UseWebApi(config);
+
+            app.UseNancy(conf =>
+            {
+                conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
+            });
+
+            //app.Use(async (ctx, next) => {
+            //    await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
+            //});
+        }
+    }    
+    ```
