@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using Nancy.Owin;
+using Nancy;
 
 namespace OwinDemo
 {
@@ -36,6 +38,15 @@ namespace OwinDemo
             });
 
             //app.Use<DebugMiddleware>();
+
+            //app.UseNancy();
+
+            //app.Map("/nancy", mappedApp => mappedApp.UseNancy());
+
+            app.UseNancy(config =>
+            {
+                config.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
+            });
 
             app.Use(async (ctx, next) => {
                 await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
