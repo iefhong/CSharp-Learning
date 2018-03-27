@@ -46,5 +46,72 @@
 * Authenticate user  
     - IAuthenticationManager.SignIn()
 * Use the user and the user's claims
+    ``` LoginModel
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }    
+    ```
+    ``` AuthController.cs
+    public class AuthController : Controller
+    {
+
+        public ActionResult Login()
+        {
+            var model = new LoginModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginModel model)
+        {
+            if (model.Username.Equals("iefhong", StringComparison.OrdinalIgnoreCase) 
+                && model.Password == "password")
+            {
+                var identity = new ClaimsIdentity("ApplicationCookie");
+                identity.AddClaims(new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, model.Username),
+                    new Claim(ClaimTypes.Name, model.Username)
+                });
+                HttpContext.GetOwinContext().Authentication.SignIn(identity);
+            }
+
+            return View(model);
+        }
+    }    
+    ```
+    ``` Login.cshtml
+    @inherits System.Web.Mvc.WebViewPage<OwinDemo.Models.LoginModel>
+    @using System.Web.Mvc.Html
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Login</title>
+    </head>
+    <body>
+        <div>
+            @using (var form = Html.BeginForm())
+            {
+            <div>
+                @Html.LabelFor(x =>x.Username)
+                @Html.TextBoxFor(x=>x.Username)
+            </div>
+            <div>
+                @Html.LabelFor(x=>x.Password)
+                @Html.PasswordFor(x=>x.Password)
+            </div>
+            <div>
+                <input type="submit" value="Log in" />
+            </div>
+            }
+        </div>
+    </body>
+    </html>
+    ```
 * Log out user
     * IAuthenticationManager.SignOut()    

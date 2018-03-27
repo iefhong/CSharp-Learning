@@ -48,16 +48,16 @@ namespace OwinDemo
 
             //app.UseNancy();
 
-            //app.Map("/nancy", mappedApp => mappedApp.UseNancy());
+            app.Map("/nancy", mappedApp => mappedApp.UseNancy());
 
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
             app.UseWebApi(config);
 
-            app.UseNancy(conf =>
-            {
-                conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
-            });
+            //app.UseNancy(conf =>
+            //{
+            //    conf.PassThroughWhenStatusCodesAre(HttpStatusCode.NotFound);
+            //});
 
             //app.Use(async (ctx, next) => {
             //    await ctx.Response.WriteAsync("<html><head><body>Hello world</body></head><html/>");
