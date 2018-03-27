@@ -50,6 +50,14 @@ namespace OwinDemo
 
             app.Map("/nancy", mappedApp => mappedApp.UseNancy());
 
+            app.Use(async (ctx, next) => {
+                if (ctx.Authentication.User.Identity.IsAuthenticated)
+                    Debug.WriteLine("User: " + ctx.Authentication.User.Identity.Name);
+                else
+                    Debug.WriteLine("User Not Authenticated");
+                await next();
+            });
+
             var config = new HttpConfiguration();
             config.MapHttpAttributeRoutes();
             app.UseWebApi(config);
