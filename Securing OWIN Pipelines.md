@@ -115,3 +115,42 @@
     ```
 * Log out user
     * IAuthenticationManager.SignOut()    
+    ``` Secret.Index.cshtml
+    @inherits System.Web.Mvc.WebViewPage
+
+    @{
+        Layout = null;
+    }
+
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Index</title>
+    </head>
+    <body>
+        <div>
+            <h1>
+                This is Secret!
+            </h1>
+            @foreach (var claim in ((System.Security.Claims.ClaimsPrincipal)User).Claims)
+            {
+                <div>
+                    @claim.Type : @claim.Value
+                </div>
+            }
+        </div>
+        <div><a href="/Auth/Logout">Log out</div>
+    </body>
+    </html>
+    
+    ```
+    ``` AuthController.cs
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return Redirect("/");
+        }    
+    ```
