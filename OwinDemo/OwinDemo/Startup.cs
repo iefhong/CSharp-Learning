@@ -44,6 +44,13 @@ namespace OwinDemo
                 LoginPath = new Microsoft.Owin.PathString("/Auth/Login")
             });
 
+
+            app.UseFacebookAuthentication(new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions {
+                AppId= "226126538131701",
+                AppSecret = "",
+                SignInAsAuthenticationType = "ApplicationCookie"
+            });
+
             //app.Use<DebugMiddleware>();
 
             //app.UseNancy();
